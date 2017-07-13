@@ -127,6 +127,9 @@
         }
         .ul_lists{
           width: 784px;
+          .li{
+            height: 21px;
+          }
           .list{
             background:#ffffff;
             width:380px;
@@ -145,6 +148,11 @@
               color:#4e4563;
               line-height:16px;
               margin-bottom: 16px;
+              width: 302px;
+              display:block;
+              white-space:nowrap;
+              overflow:hidden;
+              text-overflow:ellipsis;
             }
             .tags{
               border:1px solid #e6e0ed;
@@ -322,7 +330,23 @@
     margin: 45px 0 0 15px;
     width:440px;
     .main-box{
+      position: relative;
       margin: 14px 25px 25px ;
+      .click{
+        cursor: pointer;
+      }
+      .btn{
+        border:1px solid #40587a;
+        border-radius:2px;
+        width:114px;
+        height:34px;
+        font-size:14px;
+        color:#40587a;
+        cursor: pointer;
+        position: absolute;
+        right: 0px;
+        top:0px;
+      }
       .back-tag{
         height: 14px;
       }
@@ -440,6 +464,26 @@
         }
       }
     }
+    .main_right{
+      .button{
+        width: 179px;
+        background:#ffffff;
+        height:44px;
+        font-size:14px;
+        color:#40587a;
+        cursor: pointer;
+        .img1{
+          width: 14px;
+          height: 14px;
+          display: inline-block;
+          margin-right: 9px;
+          line-height: 44px;
+          img{
+            width: 100%;
 
+          }
+        }
+      }
+    }
   }
 }
