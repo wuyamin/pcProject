@@ -1,25 +1,47 @@
 <template>
   <div id="index">
     <div class="banner">
-      <el-button class="showQr" type="primary">体验小程序</el-button>
-      <el-button type="primary" @click="createProject">创建项目</el-button>
-      <div class="qrShow">
-        <img src="../../assets/images/index-qr.png"/>
+      <el-button style="z-index:99;" class="showQr" type="primary" @click="showS">体验小程序</el-button>
+      <el-button style="z-index:99;" type="primary" @click="createProject">创建项目</el-button>
+      <div class="qrShow" v-show="showQr">
+        <img src="../../assets/images/weixin.jpg"/>
       </div>
     </div>
-    <h1>如果你是</h1>
-    <div class="content flex tc" style="width: 1088px;height:565px;margin: 0 auto;">
-      <div class="indentityPic" v-for="item in identityPic">
-        <img :src='item.url' />
-        <div v-if="item.text1">{{item.text1}}</div>
-        <div v-if="item.text2">{{item.text2}}</div>
-        <div v-if="item.text3">{{item.text3}}</div>
-        <div v-if="item.text4">{{item.text4}}</div>
-        <div v-if="item.text5">{{item.text5}}</div>
+    <h1 style="background: white">如果你是</h1>
+    <div style="background: white;">
+      <div class="content flex content0 tc" >
+        <div class="indentityPic">
+          <img src='../../assets/images/maifangFA.png'/>
+          <div>卖方FA</div>
+          <div>项目精准推荐</div>
+          <div>微天使一手案源</div>
+          <div>大数据一键尽调</div>
+        </div>
+        <div class="indentityPic">
+          <img src='../../assets/images/maifangFA.png'/>
+          <div>买方FA</div>
+          <div>推荐精准匹配投资人</div>
+          <div>项目一键推送</div>
+          <div>微天使一手案源</div>
+          <div>大数据一键尽调</div>
+        </div>
+        <div class="indentityPic">
+          <img src='../../assets/images/touzifang.png'/>
+          <div>投资方</div>
+          <div>FA精选项目</div>
+          <div>项目管理</div>
+          <div>大数据一键尽调</div>
+        </div>
+        <div class="indentityPic">
+          <img src='../../assets/images/chuangyezhe.png'/>
+          <div>创业者</div>
+          <div>融资加速</div>
+          <div>优质FA组团服务</div>
+        </div>
       </div>
     </div>
     <h1>我们能提供</h1>
-    <div class="content flex content1">
+    <div class="content flex content1" style="height: 481px;">
       <div class="fullPageText fullPageText1">
         <div>投资业务工作场景--团队/个人工作</div>
         <div>项目、人脉数据永久留存,人员流动带不走</div>
@@ -53,21 +75,13 @@
         <img src='../../assets/images/index3.png'/>
       </div>
     </div>
-    <!--<div class="content flex content4">
-      <div class="fullPagePic fullPagePic4">
-        <img src='../../assets/images/index2.png'/>
-      </div>
-      <div class="fullPageText fullPageText4">
-        <div>竞品分析、融资监测场景&#45;&#45;融资雷达</div>
-        <div>这里最好有几句方案的介绍,这里最好有几句方案的介绍,这里最好有几句方案的介绍,这里最好有几句方案的介绍</div>
-      </div>
-    </div>-->
+    <div style="height: 300px;background:#f9fafc"></div>
     <div class="qrCode">
       <img src='../../assets/images/indexQr.png'/>
-    </div>>
-    <div class="qrCode-large">
+    </div>
+    <div class="qrCode-large tc">
       <img src="../../assets/images/index-qr.png">
-      添加FA哥微信了解更多
+      <div class="add2">添加FA哥微信了解更多</div>
     </div>
   </div>
 </template>
@@ -79,7 +93,9 @@
     data () {
       return {
         msg: '',
-        identityPic: [
+        // 控制二维码显示
+        showQr:false,
+        /*identityPic: [
           {
             url: '/static/images/maifangFA.png',
             text1: "卖方FA",
@@ -108,20 +124,32 @@
             text2:"融资加速",
             text3:"优质FA组团服务",
           }
-        ],
+        ],*/
       }
     },
     methods: {
       // 创建项目
       createProject(){
-        sessionStorage.entrance='creatproject'
-        console.log(sessionStorage.user_id)
-        if(sessionStorage.user_id){
+        localStorage.entrance='creatproject'
+        console.log(localStorage.user_id)
+        if(localStorage.user_id){
           this.$router.push({name:'creatproject'})
         }else{
           this.$router.push({name:'telephoneLogin'})
         }
       },
+      // 清除浏览器内存
+      clearSomething(){
+        console.log('清除localStorage部分key值完毕')
+        localStorage.removeItem('user_id');
+        localStorage.removeItem('id');
+        localStorage.removeItem('user_real_name');
+        localStorage.removeItem('entrance');
+      },
+      // 鼠标到体验小程序上悬浮触发二维码显示
+      showS(){
+        this.showQr = !this.showQr
+      }
     }
   }
 </script>

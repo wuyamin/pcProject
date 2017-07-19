@@ -31,7 +31,6 @@
                                :data="uploadDate">
                       <el-button slot="trigger" type="primary" v-show="planButton"><i
                         class="el-icon-plus"></i>计划书上传</el-button>
-
                     </el-upload>
                   </span>
 
@@ -385,7 +384,7 @@
                     </el-col>
                     <el-col :span="1">
                       <el-form-item label="　　" v-for="(member, index) in team.core_users" :key="member.index">
-                        <span class="imgdele" @click.prevent="removeMember(member)"><img
+                        <span class="imgdele" @click.prevent="removeMember(member)" style="margin-left: 22px"><img
                           src="../../../assets/images/delete.png"></span>
                       </el-form-item>
                     </el-col>
@@ -802,8 +801,8 @@
         uploadShow2: {//上传文件展示列表,就是老夫操作的列表
           lists: []
         },
-        uploadDate: {user_id: sessionStorage.user_id},//商业计划书上传所带的额外的参数
-        fileuploadDate: {user_id: sessionStorage.user_id},//项目文件上传带的参数
+        uploadDate: {user_id: localStorage.user_id},//商业计划书上传所带的额外的参数
+        fileuploadDate: {user_id: localStorage.user_id},//项目文件上传带的参数
         groups: {
           input: "",
           group: [{type: "其他", label: '其他', value: '其他'}],
@@ -1142,7 +1141,7 @@
       },//获取项目分组信息
 
       setFileType(){
-        this.$http.post(this.URL.getFileType, {user_id: sessionStorage.user_id})
+        this.$http.post(this.URL.getFileType, {user_id: localStorage.user_id})
           .then(res => {
             let data = res.data.data;
             this.groups.group = this.getFileType(data);
@@ -1154,23 +1153,23 @@
       getWxProjectCategory(){
 
         let data = this.$global.data.categoryData;
-        this.area = this.$tool.getCity(data.area);//设置城市1列表
-        this.scale = this.$tool.getScale(data.scale);//设置期望融资
-        this.stage = this.$tool.getStage(data.stage);//设置轮次信息
-        this.industry = this.$tool.getIndustry(data.industry);//设置轮次信息
-        this.company_status = this.getCompanyStatus(data.company_status);//设置运营状态
-        this.company_scale = this.getCompany_scale(data.company_scale);//设置公司规模几人
+        this.area = this.$global.data.area;//设置城市1列表
+        this.scale = this.$global.data.scale;//设置期望融资
+        this.stage = this.$global.data.stage;//设置轮次信息
+        this.industry = this.$global.data.industry;//设置轮次信息
         this.tags_pro = this.$global.data.tags_pro;//设置项目标签
         this.tags.changepro = this.$global.data.tags_pro;//设置项目标签2另外的
         this.tags_team = this.$global.data.tags_team;//设置团队标签
         this.tags.changeTeam = this.$global.data.tags_team;//设置团队标签
         this.tags_source = this.$global.data.pro_source;//设置项目来源
         this.tags.changesource = this.$global.data.pro_source;//设置项目来源
+        this.company_status = this.$global.data.company_status;//设置运营状态
+        this.company_scale = this.$global.data.company_scale;//设置公司规模几人
 
 
       },//获取所有下拉框的数据
       area1Change(data){
-        this.$http.post(this.URL.getArea, {user_id: sessionStorage.user_id, pid: data})//pid省
+        this.$http.post(this.URL.getArea, {user_id: localStorage.user_id, pid: data})//pid省
           .then(res => {
             let data = res.data.data;
             this.area2 = this.$tool.getCity(data);
@@ -1182,8 +1181,8 @@
       },//设置二级城市下拉列表
       area1Change2(data){
         let newData = data;
-        let pid=sessionStorage.pid;
-        this.$http.post(this.URL.getArea, {user_id: sessionStorage.user_id, pid: data})//pid省
+        let pid=localStorage.pid;
+        this.$http.post(this.URL.getArea, {user_id: localStorage.user_id, pid: data})//pid省
           .then(res => {
             let data = res.data.data;
             this.area2 = this.$tool.getCity(data);
@@ -1198,9 +1197,6 @@
           })
 
       },//设置二级城市下拉列表2
-
-
-
 
       /*获取项目详情*/
 
@@ -1269,7 +1265,7 @@
         }
       },//期望融资,融资金额
       getProjectDetail () {
-        this.$http.post(this.URL.getProjectDetail, {user_id: sessionStorage.user_id, project_id: this.project_id})
+        this.$http.post(this.URL.getProjectDetail, {user_id: localStorage.user_id, project_id: this.project_id})
           .then(res => {
 
             this.uploadShow2.lists=[];
@@ -1298,7 +1294,7 @@
             this.project.pro_intro = data.pro_intro;
 
             this.project.pro_area = data.pro_area;
-            sessionStorage.pid=data.pro_area.pid;
+            localStorage.pid=data.pro_area.pid;
             if (data.pro_area == "") {
               this.project.pro_area = {area_id: "", pid: "", area_title: ""}
             };
@@ -1392,7 +1388,7 @@
         const deleteAtUpload = this.URL.deleteAtUpload;
         if (fileList.length == 0) this.planButton = true;
         else this.planButton = true;
-        this.$http.post(deleteAtUpload, {user_id: sessionStorage.user_id, project_id: this.uploadShow.project_id})
+        this.$http.post(deleteAtUpload, {user_id: localStorage.user_id, project_id: this.uploadShow.project_id})
           .then(res => {
             if (res.status === 200) {
               this.loading = false;
@@ -1415,7 +1411,7 @@
         this.uploadShow = object;
       },//添加上传文件时,保存返回的数据
       planPreview(file){
-        const url=this.URL.weitianshi+this.URL.download+"?user_id="+sessionStorage.user_id+"&file_id="+this.uploadShow.file_id
+        const url=this.URL.weitianshi+this.URL.download+"?user_id="+localStorage.user_id+"&file_id="+this.uploadShow.file_id
         window.location.href=url;
       },//点击下载
 
@@ -1449,7 +1445,7 @@
         this.num++;
         this.fileuploadDate.project_id = this.project_id;
         this.uploadDate.project_id = this.project_id;
-        let filetypes=[".doc",".ppt",".pdf",".zip",".rar",".pptx","why.png",".jpg",".docx",".jpeg"];
+        let filetypes=[".doc",".ppt",".pdf",".zip",".rar",".pptx",".png",".jpg",".docx",".jpeg"];
         let name=file.name;
         let fileend=name.substring(name.lastIndexOf("."));
         let isnext = false;
@@ -1499,7 +1495,7 @@
         let index = this.uploadShow2.lists.indexOf(item);
          if (index !== -1) {
          let file_id = this.uploadShow2.lists[index].file_id;
-         const url=this.URL.weitianshi+this.URL.download+"?user_id="+sessionStorage.user_id+"&file_id="+file_id;
+         const url=this.URL.weitianshi+this.URL.download+"?user_id="+localStorage.user_id+"&file_id="+file_id;
          window.location.href=url;
          }
 
@@ -1511,7 +1507,7 @@
           this.fileList.splice(index, 1)
           const deleteAtFile = this.URL.deleteAtFile;
           this.$http.post(deleteAtFile, {
-            user_id: sessionStorage.user_id,
+            user_id: localStorage.user_id,
             project_id: item.project_id,
             file_id: item.file_id
           })
@@ -1554,7 +1550,7 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.$http.post(this.URL.createFileType, {
-              user_id: sessionStorage.user_id,
+              user_id: localStorage.user_id,
               type_name: this.groups.input
             })
               .then(res => {
@@ -1585,7 +1581,7 @@
         let index = this.groups.index;
         let type_name = this.groups.name
         this.$http.post(this.URL.setFileType, {
-          user_id: sessionStorage.user_id,
+          user_id: localStorage.user_id,
           file_id: this.uploadShow2.lists[index].file_id,
           type: this.uploadShow2.lists[index].type
         })
@@ -1615,9 +1611,8 @@
         this[v] = false;
       },
       goBack(){//返回上一层
-        this.$router.push('/');
+        this.$router.push({name: 'indexmyProject'})//路由传参
       },
-
 
       /*获取远程数据模拟*/
       loadData(arr){
@@ -1628,11 +1623,11 @@
           obj.address = arr[i].com_id;
           newArr.push(obj)
         }
-        return newArr
+        return newArr;
       },
       /*自动搜索,接口写这里面*/
       querySearchAsync(queryString, cb) {
-        this.$http.post(this.URL.selectCompany, {user_id: sessionStorage.user_id, company_name: queryString})
+        this.$http.post(this.URL.selectCompany, {user_id: localStorage.user_id, company_name: queryString})
           .then(res => {
             this.restaurants=[];
             let data=res.data.data;
@@ -1657,7 +1652,7 @@
       },
       handleSelect(item) {
         this.companyTitle = item.value;
-        this.$http.post(this.URL.getOneCompany, {user_id: sessionStorage.user_id, com_id: item.address})
+        this.$http.post(this.URL.getOneCompany, {user_id: localStorage.user_id, com_id: item.address})
           .then(res => {
             let data = res.data.data;
             this.$tool.console(this.$tool.getToObject(data))
@@ -1677,7 +1672,7 @@
       },//*控制添加radio
       /*添加运营状态*/
       addState(){
-        this.$http.post(this.URL.createStatusPro, {user_id: sessionStorage.user_id, status_name: this.form.state})
+        this.$http.post(this.URL.createStatusPro, {user_id: localStorage.user_id, status_name: this.form.state})
           .then(res => {
             let data = res.data;
             let newState = {};
@@ -1700,7 +1695,7 @@
         let tagName = this.$tool.checkArr(e, this.tags_pro);
 
         if (tagName != undefined) {
-          this.$http.post(this.URL.createCustomTag, {user_id: sessionStorage.user_id, type: 0, tag_name: tagName})
+          this.$http.post(this.URL.createCustomTag, {user_id: localStorage.user_id, type: 0, tag_name: tagName})
             .then(res => {
               let newState = {};
               newState.label = tagName;
@@ -1717,7 +1712,7 @@
         let tagName = this.$tool.checkArr(e, this.tags_team);
 
         if (tagName != undefined) {
-          this.$http.post(this.URL.createCustomTag, {user_id: sessionStorage.user_id, type: 1, tag_name: tagName})
+          this.$http.post(this.URL.createCustomTag, {user_id: localStorage.user_id, type: 1, tag_name: tagName})
             .then(res => {
               let newState = {};
               newState.label = tagName;
@@ -1739,7 +1734,7 @@
         let tagName = this.$tool.checkArr(e, this.tags_source);
 
         if (tagName != undefined) {
-          this.$http.post(this.URL.createCustomTag, {user_id: sessionStorage.user_id, type: 2, tag_name: tagName})
+          this.$http.post(this.URL.createCustomTag, {user_id: localStorage.user_id, type: 2, tag_name: tagName})
             .then(res => {
               let newState = {};
               newState.label = tagName;
@@ -1767,7 +1762,7 @@
           }
         }else{
           this.$http.post(this.URL.deleteCoreTeam, {
-             user_id: sessionStorage.user_id,
+             user_id: localStorage.user_id,
              project_id: this.project_id,
              project_ct_id: item.project_ct_id
            })
@@ -1803,7 +1798,7 @@
             }
           }else{
             this.$http.post(this.URL.deleteFinance, {
-              user_id: sessionStorage.user_id,
+              user_id: localStorage.user_id,
               project_id: this.project_id,
               history_id: item.history_id
             })
@@ -1840,7 +1835,7 @@
             }
           }else{
             this.$http.post(this.URL.deleteDevelop, {
-              user_id: sessionStorage.user_id,
+              user_id: localStorage.user_id,
               project_id: this.project_id,
               project_dh_id: item.project_dh_id
             })
@@ -2001,7 +1996,7 @@
           allData.pro_core_team = this.team.core_users;
           allData.pro_finance_stage = this.project.pro_stage.stage_id;
           allData.pro_company_scale = this.project.pro_company_scale.comp_scale_id;
-          allData.user_id = sessionStorage.user_id;
+          allData.user_id = localStorage.user_id;
           allData.pro_total_score=this.proportion;
           if(allData.pro_finance_stock_after=="" || allData.pro_finance_stock_after==undefined) allData.pro_finance_stock_after=0;
           if(allData.pro_finance_value=="" || allData.pro_finance_value==undefined) allData.pro_finance_value=0;
@@ -2191,9 +2186,11 @@
     created(){
       this.loading = true;
       this.getprojectId();
-      this.getWxProjectCategory();
-      this.getProjectDetail();
-      this.setFileType();
+      setTimeout(() =>{
+        this.getWxProjectCategory();
+        this.getProjectDetail();
+        this.setFileType();
+      },200);
       this.ProjectShow=false;
       this.teamShow=false;
       this.financingShow=false;

@@ -4,9 +4,9 @@
 import axios from 'axios'
 import qs from 'qs'
 
-axios.defaults.timeout = 5000;
+axios.defaults.timeout = 60000;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
-axios.defaults.baseURL = 'https://dev.weitianshi.cn';
+axios.defaults.baseURL = 'https://www.weitianshi.cn';
 
 //POST传参序列化
 axios.interceptors.request.use((config) => {

@@ -14,8 +14,7 @@
       </div>
       <div class="loginBox-right">
         <div class="wx-title tc">
-          <img src=""/>
-          微信扫码登录
+          <img src="../../assets/images/saoma.png"/>
         </div>
         <!--<img class="qrCode" src="">-->
         <!--<iframe class="qrCode" src="https://www.weitianshi.cn/auth/oauth" scrolling="no"></iframe>-->
@@ -49,7 +48,7 @@
           id: "qrCode",
           appid: "wx9de571b0aa850c03",
           scope: "snsapi_login",
-          redirect_uri: "www.local.app/auth/weixin/callback",
+          redirect_uri: "https://www.weitianshi.cn/auth/weixin/callback",
           href: 'https://www.weitianshi.cn/static/css/qrCode.css',
           state:time
         });

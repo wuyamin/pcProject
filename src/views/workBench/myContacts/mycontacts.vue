@@ -250,6 +250,7 @@
       <el-select
         v-model="tagsValue"
         multiple
+        :multiple-limit="multiplelimit"
         filterable
         allow-create
         style="width:100%"
@@ -271,13 +272,17 @@
     </el-dialog>
 
     <!--项目推送弹窗-->
-    <projectpush :dialog-push="dialogPushVisible" :user-message="userMessage" :user-email="userEmail" @changeall="dialogVisiblechange"></projectpush>
+    <projectpush :dialog-push="dialogPushVisible" :user-message="userMessage" :user-email="userEmail" @changeall="dialogVisiblechange" @changeClose="dialogVisiblechangeCloase"></projectpush>
+
+    <!--项目预览弹窗-->
+    <projectpreview :dialog-preview-visible="dialogPreviewVisible" @changeCon="dialogPrechange"></projectpreview>
 
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 import projectpush from './projectPush.vue'
+import projectpreview from './projectPreview.vue'
 export default {
   data () {
     return {
@@ -288,14 +293,12 @@ export default {
       searchinput:'',//搜索绑定
       dialogVisible:false,//标签弹框设置
       dialogPushVisible:false,//项目推送弹框设置
+      dialogPreviewVisible:false,//项目预览弹窗
       totalData:1,//总页数
       currentPage:1,//当前页数
       getPra:{},//筛选的请求参数
       tagsValue:[],//标签弹框数据绑定
-      addTags:[{
-        value: '',
-        label: ''
-      }],//人脉标签展示数据
+      addTags:[],//人脉标签展示数据
       tableData:[
           /*{
             user_avatar_url:"https://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83epia77Br2Wk8RiaR8hMAxMG9DerJfzuRCGr5Pf0s2MNDj1FU6dwnpKycchqTRck13S0RTQ6Cg3qZy4A/0",//头像
@@ -315,27 +318,29 @@ export default {
             is_bind:0,//编辑
         }*/
       ],//列表数据
-      user_invest_industryFilters:[{ text: '', value: '' }],//投资领域筛选条件
+      user_invest_industryFilters:[],//投资领域筛选条件
       user_invest_stageFilters:[],//投资轮次筛选
       tagFilters:[],//标签筛选条件
       login_timeFilters:[],//最近活跃
       userMessage:{
-        user_real_name:'翁浩平',//姓名
-        user_company_career:'投资总监',//职位
-        user_company_name:'杭州投着乐网络科技有限公司',//公司名称
+        user_real_name:'',//姓名
+        user_company_career:'',//职位
+        user_company_name:'',//公司名称
       },//传递给推送的数据
       userEmail:'',
       tags:{
         changecont:[],//项目标签新增
         index:'',//取数据保存的位置
         card_id:''//人脉id
-      }
+      },
+      multiplelimit:5,//标签控制5个
 
 
     }
   },
   components: {
-    projectpush
+    projectpush,
+    projectpreview
   },
   methods: {
 
@@ -368,7 +373,7 @@ export default {
         type: 'warning'
       }).then(() => {
         this.loading=true;
-        this.$http.post(this.URL.deleteConnectUser, {user_id:sessionStorage.user_id,card_id: row.card_id})
+        this.$http.post(this.URL.deleteConnectUser, {user_id:localStorage.user_id,card_id: row.card_id})
           .then(res => {
             this.loading=false;
             this.$tool.success("删除成功")
@@ -404,11 +409,19 @@ export default {
     },//添加人脉
     dialogVisiblechange(msg){
       this.dialogPushVisible=msg;
+      this.dialogPreviewVisible=true;
+    },
+    dialogVisiblechangeCloase(msg){
+      this.dialogPushVisible=msg;
+    },//关闭项目推送弹窗
+    dialogPrechange(msg){
+      this.dialogPushVisible=true;
+      this.dialogPreviewVisible=msg;
     },
     /*请求函数*/
     handleIconClick(){
       this.loading=true;
-      this.getPra.user_id=sessionStorage.user_id;
+      this.getPra.user_id=localStorage.user_id;
       this.getPra.search=this.searchinput;
       this.currentPage=1;
       this.getPra.page=1;
@@ -428,7 +441,7 @@ export default {
     filterChange(filters){
       this.loading=true;
       this.currentPage=1;
-      this.getPra.user_id=sessionStorage.user_id;
+      this.getPra.user_id=localStorage.user_id;
       if(filters.order){
         if(filters.order=="ascending") filters.order="asc"//升降序
         else filters.order="desc";
@@ -460,7 +473,7 @@ export default {
     filterChangeCurrent(page){
       delete this.getPra.page;
       this.loading=true;
-      this.getPra.user_id=sessionStorage.user_id;
+      this.getPra.user_id=localStorage.user_id;
       this.getPra.page=page;//控制当前页码
       this.$tool.console(this.getPra);
       this.$http.post(this.URL.getConnectUser,this.getPra)
@@ -479,7 +492,7 @@ export default {
 
     titleSift(){
       this.loading=true;
-      this.$http.post(this.URL.userTitleSift,{user_id: sessionStorage.user_id})
+      this.$http.post(this.URL.userTitleSift,{user_id: localStorage.user_id})
         .then(res=>{
           let data = res.data.data;
           let card_industry=data.card_industry;//投资领域
@@ -495,7 +508,6 @@ export default {
           this.$tool.console(err,2)
         })
     },// 获取表头
-
     setUrlChange(url,name){
         let string='';
         if(url=='') string = name.charAt(0);
@@ -570,7 +582,7 @@ export default {
     addChangeTag(e){
       let tagName = this.$tool.checkArr(e, this.addTags);
       if (tagName != undefined) {
-        this.$http.post(this.URL.createCustomTag, {user_id: sessionStorage.user_id, type: 3, tag_name: tagName})
+        this.$http.post(this.URL.createCustomTag, {user_id: localStorage.user_id, type: 3, tag_name: tagName})
           .then(res => {
             let newState = {};
             newState.label = tagName;
@@ -586,7 +598,7 @@ export default {
     addTag(){
       this.loading=true;
       this.$tool.setTag(this.tagsValue,this.tags.changecont);
-      this.$http.post(this.URL.setConnectTag, {user_id:sessionStorage.user_id,card_id: this.tags.card_id,tag: this.tagsValue})
+      this.$http.post(this.URL.setConnectTag, {user_id:localStorage.user_id,card_id: this.tags.card_id,tag: this.tagsValue})
         .then(res => {
           this.loading=false;
           this.$tool.success("设置成功");

@@ -7,6 +7,7 @@ const forgetPassword = r => require.ensure([], () => r(require('@/views/login/fo
 const bindTelephone = r => require.ensure([], () => r(require('@/views/login/bindTelephone.vue')), 'bindTelephone');
 const telephoneLogin = r => require.ensure([], () => r(require('@/views/login/telephoneLogin.vue')), 'telephoneLogin');
 const codeLogin = r => require.ensure([], () => r(require('@/views/login/codeLogin.vue')), 'codeLogin');
+const loginReady = r => require.ensure([], () => r(require('@/views/login/loginReady.vue')), 'loginReady');
 
 /*===============================用户身份路由配置=================================*/
 const identityChoose = r => require.ensure([], () => r(require('@/views/identity/identityChoose.vue')), 'identityChoose');
@@ -58,10 +59,10 @@ const checkArray = r => require.ensure([], () => r(require('@/test/checkArray.vu
 export default [
 
   {
-    path: '',component: workBench,
+    path: '/workBench',component: workBench,
     children:[
       // { path: '', component: indexmyProject},
-      { path: '/', component: indexmyProject,
+      { path: '/workBench', component: indexmyProject,name:"indexmyProject",
         children:[
           { path: '', component: myProject, name:"myProject"},
           { path: 'myContacts', component: myContacts, name:"myContacts"},
@@ -71,16 +72,15 @@ export default [
       { path: 'projectDetails', component: projectDetails, name:"projectDetails"},//项目详情
       { path: 'editproject', component: editproject, name:"editproject"},//编辑项目
       { path: 'creatproject', component: creatproject, name:"creatproject"},//创建项目
-
       { path: 'createContacts', component: createContacts, name:"createContacts"},//创建人脉
       { path: 'contactsDetails', component: contactsDetails, name:"contactsDetails"},//人脉详情
     ]
   },
   {
-    path: '/index', name: 'index', component: index,
+    path: '/', name: 'index', component: index,
   },
   {
-    path: '/logining', name: 'SmallRoutine', component: SmallRoutine
+    path: '/qr', name: 'SmallRoutine', component: SmallRoutine
   },
   {
     path: '/login', component:login,
@@ -88,6 +88,9 @@ export default [
       { path:'',name:'telephoneLogin',component:telephoneLogin},
       { path:'codeLogin',name:'codeLogin',component:codeLogin},
     ]
+  },
+  {
+    path: '/loginReady', name: 'loginReady', component:loginReady
   },
   {
     path: '/forgetPassword', name: 'forgetPassword', component:forgetPassword

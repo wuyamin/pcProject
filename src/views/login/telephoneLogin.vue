@@ -4,7 +4,7 @@
     <div class="codeFrame">
       <input class="code" v-model="captcha" placeholder="请输入验证码">
       <el-button type="text" @click="getCode" v-show="is_getCode==0">获取验证码</el-button>
-      <el-button type="text" v-show="is_getCode!=0" :disabled="true">{{captchaNum}}后重新获取</el-button>
+      <el-button type="text" v-show="is_getCode!=0" :disabled="true">{{captchaNum}}s</el-button>
     </div>
     <el-button class="loginBtn tc" @click="login">登录/注册</el-button>
   </div>
@@ -60,12 +60,13 @@
           }).then(res => {
             console.log(res)
             if(res.data.status_code===2000000){
-              sessionStorage.user_id=res.data.user_id;
+              localStorage.user_id=res.data.user_id;
+              localStorage.user_real_name=res.data.user_real_name;
               //is_exist: 0:新用户;1:老用户;NaN:没有请求过验证码
               if (res.data.is_exist === 0) {
                 this.$router.push({name:'identityChoose'})
               }else if (res.data.is_exist === 1) {
-                this.$router.push({name:sessionStorage.entrance})
+                this.$router.push({name:localStorage.entrance})
               }
             }else{
               this.$tool.error(res.data.error_msg)
@@ -81,4 +82,7 @@
 
 <style scoped lang="less">
   @import "../../assets/css/login.less";
+  ::-moz-placeholder { color: #99a9bf; }
+  ::-webkit-input-placeholder { color:#99a9bf; }
+  :-ms-input-placeholder { color:#99a9bf;}
 </style>
