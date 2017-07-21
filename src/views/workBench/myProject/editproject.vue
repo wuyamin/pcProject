@@ -19,7 +19,7 @@
                   <span class="f-title fl">商业计划书</span>
                   <span style="margin-left: 20px;" class="fl">
                     <el-upload class="planUpload"
-                               action="api/v/project/projectUpload"
+                               action="https://www.weitianshi.cn/api/v/project/projectUpload"
                                :on-preview="planPreview"
                                :on-change="planChange"
                                :on-success="planuploadsuccess"
@@ -41,7 +41,7 @@
                       <el-upload
                         class="upload"
                         ref="upload"
-                        action="api/v/project/uploadFile"
+                        action="https://www.weitianshi.cn/api/v/project/uploadFile"
                         :on-change="handleChange"
                         :on-success="uploadsuccess"
                         :on-error="uploaderror"
@@ -1627,23 +1627,25 @@
       },
       /*自动搜索,接口写这里面*/
       querySearchAsync(queryString, cb) {
-        this.$http.post(this.URL.selectCompany, {user_id: localStorage.user_id, company_name: queryString})
+        if(queryString.length>2) {
+          this.$http.post(this.URL.selectCompany, {user_id: localStorage.user_id, company_name: queryString})
           .then(res => {
-            this.restaurants=[];
-            let data=res.data.data;
-            this.restaurants=this.loadData(data);
-             if(queryString=="") this.restaurants=[];
-             let restaurants = this.restaurants;
-/*             let results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;*/
-             clearTimeout(this.timeout);
-             this.timeout = setTimeout(() => {
+            this.restaurants = [];
+            let data = res.data.data;
+            this.restaurants = this.loadData(data);
+            if (queryString == "") this.restaurants = [];
+            let restaurants = this.restaurants;
+            /*             let results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;*/
+            clearTimeout(this.timeout);
+            this.timeout = setTimeout(() => {
               cb(restaurants);
-             }, 300);
+            }, 300);
           })
           .catch(err => {
 //          this.alert("加载失败");
             this.$tool.console(this.restaurants);
           })
+        }
       },
       createStateFilter(queryString) {
         return (state) => {

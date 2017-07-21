@@ -17,7 +17,7 @@
               <span style="margin-left: 20px;" class="fl">
                 <el-upload class="Upload"
                            ref="upload"
-                           action="api/v/project/projectUpload"
+                           action="https://www.weitianshi.cn/api/v/project/projectUpload"
                            :on-change="planChange"
                            :on-success="planuploadsuccess"
                            :on-preview="planPreview"
@@ -480,12 +480,13 @@
       },
       /*自动搜索,接口写这里面*/
       querySearchAsync(queryString, cb) {
-        this.$http.post(this.URL.selectCompany,{user_id:localStorage.user_id,company_name:queryString})
-          .then(res=>{
-            this.restaurants=[];
-            let data=res.data.data;
-            this.restaurants=this.loadData(data);
-            if(queryString=="") this.restaurants=[];
+        if(queryString.length>2) {
+          this.$http.post(this.URL.selectCompany, {user_id: localStorage.user_id, company_name: queryString})
+          .then(res => {
+            this.restaurants = [];
+            let data = res.data.data;
+            this.restaurants = this.loadData(data);
+            if (queryString == "") this.restaurants = [];
             let restaurants = this.restaurants;
             /*          let results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;*/
             clearTimeout(this.timeout);
@@ -493,10 +494,11 @@
               cb(restaurants);
             }, 300);
           })
-          .catch(err=>{
+          .catch(err => {
             this.$tool.error("加载失败");
             this.$tool.console(err);
           })
+        }
       },
       createStateFilter(queryString) {
         return (state) => {

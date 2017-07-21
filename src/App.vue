@@ -108,9 +108,9 @@
           this.$router.push({name:'index'})
         }
         //一小时不动后退出登录
-        setTimeout(function(){
+        /*setTimeout(function(){
           localStorage.clear()
-        },3600000)
+        },3600000)*/
         //登录状态下拦截
         /*if(localStorage.user_id && (this.$route.path==='/identityChoose' || this.$route.path==='/identityDetail')){
           this.$router.push({name:'index'})

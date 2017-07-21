@@ -298,22 +298,24 @@
         this.dialogVisible = true;
       },
       querySearchAsync(queryString, cb) {
-        this.$http.post(this.URL.selectCompany, {user_id: localStorage.user_id, company_name: queryString})
-        .then(res => {
-          this.restaurants = [];
-          let data = res.data.data;
-          this.restaurants = this.loadData(data);
-          if (queryString == "") this.restaurants = [];
-          let restaurants = this.restaurants;
-          /*          let results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;*/
-          clearTimeout(this.timeout);
-          this.timeout = setTimeout(() => {
-            cb(restaurants);
-          }, 300);
-        })
-        .catch(err => {
-          console.log(err);
-        })
+        if(queryString.length>2){
+          this.$http.post(this.URL.selectCompany, {user_id: localStorage.user_id, company_name: queryString})
+          .then(res => {
+            this.restaurants = [];
+            let data = res.data.data;
+            this.restaurants = this.loadData(data);
+            if (queryString == "") this.restaurants = [];
+            let restaurants = this.restaurants;
+            /*          let results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;*/
+            clearTimeout(this.timeout);
+            this.timeout = setTimeout(() => {
+              cb(restaurants);
+            }, 300);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+        }
       },
       createStateFilter(queryString) {
         return (state) => {
